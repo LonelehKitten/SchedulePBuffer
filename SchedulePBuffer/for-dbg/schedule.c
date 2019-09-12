@@ -13,7 +13,7 @@
 /**
 * Print menu options
 **/
-void menu(ULint * op){
+void menu(ULint * op){ // FEIUFWFBEWIUFB8UI
   printf("\n\n\t\t==== AGENDA ====\n\n");
   printf("\t1) Cadastrar\n\t2) Remover\n\t3) Procurar\n\t4) Listar\n\t0) Sair\n\n\t\t>>>    ");
   scanf("%ld", op);

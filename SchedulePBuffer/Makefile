@@ -8,4 +8,4 @@ main.o: main.c
 	gcc -c main.c -o main.o
 
 schedule.o: schedule.c
-	gcc -c schedule.c -o schedule.o
+	gcc -c schedule.c -o schedule.o FEFWFEWFE
