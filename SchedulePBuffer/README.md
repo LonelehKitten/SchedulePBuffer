@@ -6,5 +6,3 @@
 
  * Remove by id. Each register has your unique id.
  
-
- 

@@ -16,7 +16,7 @@ typedef struct schedule{
 
 void * pBuffer;
 
-ULint * init(); // VIONH9IEWHGOIERB9O
+ULint * init();
 
 void put();
 void pop();

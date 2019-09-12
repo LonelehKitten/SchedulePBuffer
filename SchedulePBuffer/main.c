@@ -6,7 +6,7 @@ int main(void) {
 
   do{
 
-    menu(op); // FJBIUEWBIUVFWBVIU
+    menu(op);
 
     switch(*op){
       case 1:
