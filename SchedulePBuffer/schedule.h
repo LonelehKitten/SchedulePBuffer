@@ -5,16 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef unsigned long int ULint;
-
-typedef struct schedule{
-  ULint id;
-  char name[100];
-  int age;
-  int cep;
-} Schedule;
-
-void * pBuffer;
+#include "buffer.h"
 
 ULint * init();
 
@@ -29,5 +20,7 @@ Schedule * allocSchedule();
 void destroySchedule(ULint * ids);
 
 ULint bufferLength();
+
+
 
 #endif /* SCHEDULE_H */
