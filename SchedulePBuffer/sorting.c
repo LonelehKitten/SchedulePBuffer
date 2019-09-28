@@ -1,13 +1,13 @@
 #include "sorting.h"
 
-void InsertionSort(unsigned int * n){ 
+void InsertionSort(ULint * n){ 
 
     ULint * i = (ULint *) (ULINT(1));
     ULint * j = (ULint *) (ULINT(2));
 
     Schedule * aux = (Schedule *) ULINT(7);
 
-    for (*i) = 1; (*i) < (*n); (*i)++){  
+    for ((*i) = 1; (*i) < (*n); (*i)++){  
         swap( aux, (Schedule *)(sorting+(*i)*sizeof(Schedule)) );
         (*j) = (*i) - 1;
 
@@ -19,7 +19,7 @@ void InsertionSort(unsigned int * n){
     }  
 }
 
-void SelectionSort(unsigned int * n){
+void SelectionSort(ULint * n){
     ULint * i, * j, * k;
     Schedule * s1, * s2, * aux;
 
@@ -48,14 +48,14 @@ void SelectionSort(unsigned int * n){
     } 
 }
 
-void copy(unsigned int * n){
+void copy(ULint * n){
     sorting = malloc((*n)*sizeof(Schedule));
 
     ULint * i = (ULint *) (ULINT(2));
 
     Schedule * sort_aux, * buffer_aux;
 
-    for(*i = 0; *i < (*n); (*i)++){
+    for( (*i) = 0; *i < (*n); (*i)++){
         
         sort_aux   = (Schedule *) (sorting + (*i)*sizeof(Schedule));
         buffer_aux = (Schedule *) SCHEDULE(*i);
@@ -74,13 +74,14 @@ void swap(Schedule * to, Schedule * from){
 }
 
 int match(char * a, char * b){
-    strcpy(a, tolower(a));
-    strcpy(b, tolower(b));
-
     ULint * m = (ULint *) ULINT(6);
+
+    for((*m) = 0; (*m) < strlen(a); (*m)++) a[(*m)] = tolower(a[(*m)]);
+    for((*m) = 0; (*m) < strlen(b); (*m)++) b[(*m)] = tolower(b[(*m)]);
+
     (*m) = 0;
 
-    while(true){
+    while(1){
         if( (*m) < ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ) &&  b[(*m)] > a[(*m)])
             return 1;
         else if((*m) == ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ))

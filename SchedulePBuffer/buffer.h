@@ -15,5 +15,6 @@ void * pBuffer;
 #define END pBuffer
 #define ULINT(I) (pBuffer+(I)*sizeof(ULint))
 #define SCHEDULE(S) ( (pBuffer+7*sizeof(ULint)+sizeof(Schedule)) + (S)*sizeof(Schedule) )
+#define HEADER_SIZE ( 7*sizeof(ULint)+sizeof(Schedule) )
 
 #endif /* BUFFER_H */

@@ -29,7 +29,7 @@ void menu(ULint * op){
 * Initialize the pBuffer and its headers
 **/
 ULint * init(){
-    END = (void *) malloc(4*sizeof(ULint) + sizeof(Schedule));
+    END = (void *) malloc(HEADER_SIZE + sizeof(Schedule));
     *(ULint *)END = (ULint) (SCHEDULE(0));
     return ULINT(1);
 }
@@ -92,7 +92,7 @@ void search(){
     ULint * j = (ULint *) (ULINT(3));
     Schedule * sc;
 
-    *j = (bufferLength() - 4*sizeof(ULint) - sizeof(Schedule)) / sizeof(Schedule);
+    *j = (bufferLength() - HEADER_SIZE - sizeof(Schedule)) / sizeof(Schedule);
 
     for(*i = 0; *i < *j; (*i)++){
         sc = (Schedule *) SCHEDULE(*i);
@@ -122,10 +122,10 @@ void list(){
         scanf("%ld", i);
     }while( (*i) < 0 && (*i) > 2);
     
-    *j = (bufferLength() - 4*sizeof(ULint) - sizeof(Schedule)) / sizeof(Schedule);
+    *j = (bufferLength() - HEADER_SIZE - sizeof(Schedule)) / sizeof(Schedule);
 
-    if( !(*i) ){
-        for( ; *i < *j; (*i)++){
+    if( (*i) == 0 ){
+        for( ; (*i) < (*j); (*i)++){
             sc = (Schedule *) SCHEDULE(*i);
             printf("\n\n\t==== [ %ld ] ================\n", sc->id);
             printf("\n\t\tNome:    %s", sc->name);
@@ -151,14 +151,14 @@ void list(){
 **/
 Schedule * allocSchedule(){
     END = realloc(END, bufferLength()+sizeof(Schedule));
-    *(ULint *) END = (ULint) ( SCHEDULE(0) + ( (*(ULint *)(ULINT(2))) - 4*sizeof(ULint)) ); //+ sizeof(Schedule);
+    *(ULint *) END = (ULint) ( SCHEDULE(0) + ( (*(ULint *)(ULINT(2))) - HEADER_SIZE) ); //+ sizeof(Schedule);
 
     Schedule * sc;
   
     ULint * j = (ULint *) (ULINT(2));
     ULint * k = (ULint *) (ULINT(3));
 
-    *k = (bufferLength() - 4*sizeof(ULint) - sizeof(Schedule)) / sizeof(Schedule);
+    *k = (bufferLength() - HEADER_SIZE - sizeof(Schedule)) / sizeof(Schedule);
 
     for(*j = 1; *j < (*k); (*j)++){
         sc = (Schedule *) SCHEDULE(*j-1);
@@ -191,7 +191,7 @@ void destroySchedule(ULint * id){
     *(ULint *)(ULINT(1)) = *id; // save the choosen schedule id
 
     END = (void *) realloc(END, bufferLength()-sizeof(Schedule));
-    *(ULint *) END = (ULint) ( SCHEDULE(0) + ( (*(ULint *)(ULINT(2))) - 4*sizeof(ULint)) ) - 2*sizeof(Schedule); // recover the last created schedule by the buffer length saved
+    *(ULint *) END = (ULint) ( SCHEDULE(0) + ( (*(ULint *)(ULINT(2))) - HEADER_SIZE) ) - 2*sizeof(Schedule); // recover the last created schedule by the buffer length saved
 
     *id = *(ULint *)(ULINT(1)); // recover saved id
     *id = (ULint) SCHEDULE(*id-1); // take the address by the saved id
@@ -215,7 +215,7 @@ ULint bufferLength(){
   ULint * l = (ULint *) (ULINT(2));
   ULint * a = (ULint *) (ULINT(3));
 
-  *l = 4*sizeof(ULint);
+  *l = HEADER_SIZE;
 
   for(*a = (ULint) SCHEDULE(0); *a <= *(ULint *)END; *a += sizeof(Schedule))
     *l += sizeof(Schedule);
