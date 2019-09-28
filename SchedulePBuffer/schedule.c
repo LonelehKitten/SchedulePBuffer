@@ -2,11 +2,16 @@
 
 /*
 
-    pBuffer                 = last_schedule     (ULint)
-    pBuffer+sizeof(ULint)   = aux1              (ULint)
-    pBuffer+2*sizeof(ULint) = aux2              (ULint)
-    pBuffer+3*sizeof(ULint) = aux3              (ULint)
-    pBuffer+4*sizeof(ULint) = begin_schedule    (Schedule)
+    END         -> pBuffer                  = last_schedule     (ULint)
+    ULINT(1)    -> pBuffer+sizeof(ULint)    = aux1              (ULint)
+    ULINT(2)    -> pBuffer+2*sizeof(ULint)  = aux2              (ULint)
+    ULINT(3)    -> pBuffer+3*sizeof(ULint)  = aux3              (ULint)
+    ULINT(4)    -> pBuffer+4*sizeof(ULint)  = aux1              (ULint)
+    ULINT(5)    -> pBuffer+5*sizeof(ULint)  = aux2              (ULint)
+    ULINT(6)    -> pBuffer+6*sizeof(ULint)  = aux3              (ULint)
+    ULINT(7)    -> pBuffer+7*sizeof(ULint)  = aux schedule      (Schedule)
+    BEGIN       -> pBuffer+7*sizeof(ULint)
+                         +sizeof(Schedule)  = begin_schedule    (Schedule)
 
 */
 
@@ -24,9 +29,9 @@ void menu(ULint * op){
 * Initialize the pBuffer and its headers
 **/
 ULint * init(){
-    pBuffer = (void *) malloc(4*sizeof(ULint) + sizeof(Schedule));
-    *(ULint *)pBuffer = (ULint) (pBuffer+4*sizeof(ULint));
-    return pBuffer+sizeof(ULint);
+    END = (void *) malloc(4*sizeof(ULint) + sizeof(Schedule));
+    *(ULint *)END = (ULint) (SCHEDULE(0));
+    return ULINT(1);
 }
 
 /**
@@ -53,7 +58,7 @@ void put(){
 **/
 void pop(){
 
-    ULint * id = (ULint *)(pBuffer+3*sizeof(ULint));
+    ULint * id = (ULint *)(ULINT(3));
 
     printf("\n\n\t\t==== REMOVER ====\n\n");
     printf("\tID:    ");
@@ -62,7 +67,7 @@ void pop(){
 
     /* CHECKPOINT */
 
-    if(*(ULint *)pBuffer != (ULint) pBuffer+4*sizeof(ULint) && *id > 0 && *id <= ((Schedule *) ((*(ULint *)pBuffer)-sizeof(Schedule)))->id){
+    if(*(ULint *)END != (ULint) SCHEDULE(0) && *id > 0 && *id <= ((Schedule *) ((*(ULint *)END)-sizeof(Schedule)))->id){
         
         destroySchedule(id);
         printf("\n\tCadastro removido com sucesso!\n");
@@ -83,14 +88,14 @@ void search(){
     scanf("%[^\n]s", name);
     getchar();
 
-    ULint * i = (ULint *) (pBuffer+2*sizeof(ULint));
-    ULint * j = (ULint *) (pBuffer+3*sizeof(ULint));
+    ULint * i = (ULint *) (ULINT(2));
+    ULint * j = (ULint *) (ULINT(3));
     Schedule * sc;
 
     *j = (bufferLength() - 4*sizeof(ULint) - sizeof(Schedule)) / sizeof(Schedule);
 
     for(*i = 0; *i < *j; (*i)++){
-        sc = (Schedule *) (pBuffer+4*sizeof(ULint))+(*i)*sizeof(Schedule);
+        sc = (Schedule *) SCHEDULE(*i);
         if(strcmp( sc->name , name ) == 0){
           printf("\n\n\t==== [ %ld ] ================\n", sc->id);
           printf("\n\t\tNome:    %s", sc->name);
@@ -106,22 +111,37 @@ void search(){
 * Show all registers
 **/
 void list(){
-    printf("\n\n\t\t==== LISTAR ====\n\n");
 
-    ULint * i = (ULint *) (pBuffer+2*sizeof(ULint));
-    ULint * j = (ULint *) (pBuffer+3*sizeof(ULint));
+    ULint * i = (ULint *) (ULINT(2));
+    ULint * j = (ULint *) (ULINT(3));
     Schedule * sc;
 
+    do{
+        printf("\n\n\t\t==== LISTAR ====\n\n");
+        printf("\t1) Insertion Sort\n\t2) Selection Sort\n\t0) Sem Ordenação\n\n\t\t>>>    ");
+        scanf("%ld", i);
+    }while( (*i) < 0 && (*i) > 2);
+    
     *j = (bufferLength() - 4*sizeof(ULint) - sizeof(Schedule)) / sizeof(Schedule);
 
-    for(*i = 0; *i < *j; (*i)++){
-        sc = (Schedule *) ((pBuffer+4*sizeof(ULint))+(*i)*sizeof(Schedule));
-        printf("\n\n\t==== [ %ld ] ================\n", sc->id);
-        printf("\n\t\tNome:    %s", sc->name);
-        printf("\n\t\tIdade:   %d", sc->age);
-        printf("\n\t\tCEP:     %d", sc->cep);
+    if( !(*i) ){
+        for( ; *i < *j; (*i)++){
+            sc = (Schedule *) SCHEDULE(*i);
+            printf("\n\n\t==== [ %ld ] ================\n", sc->id);
+            printf("\n\t\tNome:    %s", sc->name);
+            printf("\n\t\tIdade:   %d", sc->age);
+            printf("\n\t\tCEP:     %d", sc->cep);
+        }
     }
-
+    else if((*i) == 1){
+        copy(j);
+        InsertionSort(j);
+    }
+    else if((*i) == 2){
+        copy(j);
+        SelectionSort(j);
+    }
+    
 }
 
 /* ==== UTILS ==== */
@@ -130,24 +150,24 @@ void list(){
 * Allocs new Schedule structure
 **/
 Schedule * allocSchedule(){
-    pBuffer = realloc(pBuffer, bufferLength()+sizeof(Schedule));
-    *(ULint *) pBuffer = (ULint) ( pBuffer+4*sizeof(ULint) + ( (*(ULint *)(pBuffer+2*sizeof(ULint))) - 4*sizeof(ULint)) ); //+ sizeof(Schedule);
+    END = realloc(END, bufferLength()+sizeof(Schedule));
+    *(ULint *) END = (ULint) ( SCHEDULE(0) + ( (*(ULint *)(ULINT(2))) - 4*sizeof(ULint)) ); //+ sizeof(Schedule);
 
     Schedule * sc;
   
-    ULint * j = (ULint *) (pBuffer+2*sizeof(ULint));
-    ULint * k = (ULint *) (pBuffer+3*sizeof(ULint));
+    ULint * j = (ULint *) (ULINT(2));
+    ULint * k = (ULint *) (ULINT(3));
 
     *k = (bufferLength() - 4*sizeof(ULint) - sizeof(Schedule)) / sizeof(Schedule);
 
     for(*j = 1; *j < (*k); (*j)++){
-        sc = (Schedule *) ((ULint) (pBuffer+4*sizeof(ULint)) +  (*j-1)*sizeof(Schedule));
+        sc = (Schedule *) SCHEDULE(*j-1);
         if(*j == 1 && sc->id != *j) break;
         if( *j+1 != *k && ( (Schedule *) ( ((ULint)sc)+sizeof(Schedule) ) )->id - sc->id > 1){(*j)++; break;}
     }
     
     for(; *k > *j; (*k)--){
-        sc =  (Schedule *) ((ULint) (pBuffer+4*sizeof(ULint)) + (*k-1)*sizeof(Schedule));
+        sc = (Schedule *) SCHEDULE(*k-1);
         // id
         sc->id = ( (Schedule *) ( ((ULint)sc)-sizeof(Schedule) ) )->id;
         // name
@@ -158,7 +178,7 @@ Schedule * allocSchedule(){
         sc->cep = ( (Schedule *) ( ((ULint)sc)-sizeof(Schedule) ) )->cep;
     }
 
-    sc =  (Schedule *) ((ULint) (pBuffer+4*sizeof(ULint)) + (*j-1)*sizeof(Schedule));
+    sc =  (Schedule *) SCHEDULE(*j-1);
     sc->id = *j;
     
     return sc;
@@ -168,36 +188,36 @@ Schedule * allocSchedule(){
 * Destroy a Schedule structure
 **/
 void destroySchedule(ULint * id){
-    *(ULint *)(pBuffer+sizeof(ULint)) = *id; // save the choosen schedule id
+    *(ULint *)(ULINT(1)) = *id; // save the choosen schedule id
 
-    pBuffer = (void *) realloc(pBuffer, bufferLength()-sizeof(Schedule));
-    *(ULint *) pBuffer = (ULint) ( pBuffer+4*sizeof(ULint) + ( (*(ULint *)(pBuffer+2*sizeof(ULint))) - 4*sizeof(ULint)) ) - 2*sizeof(Schedule); // recover the last created schedule by the buffer length saved
+    END = (void *) realloc(END, bufferLength()-sizeof(Schedule));
+    *(ULint *) END = (ULint) ( SCHEDULE(0) + ( (*(ULint *)(ULINT(2))) - 4*sizeof(ULint)) ) - 2*sizeof(Schedule); // recover the last created schedule by the buffer length saved
 
-    *id = *(ULint *)(pBuffer+sizeof(ULint)); // recover saved id
-    *id = (ULint) ((pBuffer+4*sizeof(ULint))+(*id-1)*sizeof(Schedule)); // take the address by the saved id
+    *id = *(ULint *)(ULINT(1)); // recover saved id
+    *id = (ULint) SCHEDULE(*id-1); // take the address by the saved id
     // IMPORTANT: From here, the pointer "id" starts to work as "dead schedule address".
 
-    for(; *id < * (ULint*) pBuffer; *id += sizeof(Schedule)){ // shift the schedules to left
+    for(; *id < * (ULint*) END; *id += sizeof(Schedule)){ // shift the schedules to left
         ((Schedule *) *id)->id = ((Schedule *) (*id+sizeof(Schedule)))->id;
         strcpy( ((Schedule *) *id)->name, ((Schedule *) (*id+sizeof(Schedule)))->name );
         ((Schedule *) *id)->age = ((Schedule *) (*id+sizeof(Schedule)))->age;
         ((Schedule *) *id)->cep = ((Schedule *) (*id+sizeof(Schedule)))->cep;
     }
 
-    strcpy(( (Schedule *) (*(ULint *)pBuffer) )->name, "\0");
-    ( (Schedule *) (*(ULint *)pBuffer) )->id = 0;
+    strcpy(( (Schedule *) (*(ULint *)END) )->name, "\0");
+    ( (Schedule *) (*(ULint *)END) )->id = 0;
 }
 
 /**
 * Return the buffer length, since the first byte until the last byte of the last Schedule
 **/
 ULint bufferLength(){
-  ULint * l = (ULint *) (pBuffer+2*sizeof(ULint));
-  ULint * a = (ULint *) (pBuffer+3*sizeof(ULint));
+  ULint * l = (ULint *) (ULINT(2));
+  ULint * a = (ULint *) (ULINT(3));
 
   *l = 4*sizeof(ULint);
 
-  for(*a = (ULint) pBuffer+4*sizeof(ULint); *a <= *(ULint *)pBuffer; *a += sizeof(Schedule))
+  for(*a = (ULint) SCHEDULE(0); *a <= *(ULint *)END; *a += sizeof(Schedule))
     *l += sizeof(Schedule);
 
   return *l;

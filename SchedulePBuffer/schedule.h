@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "buffer.h"
+#include "sorting.h"
 
 ULint * init();
 
