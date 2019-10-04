@@ -116,15 +116,16 @@ void list(){
     ULint * j = (ULint *) (ULINT(3));
     Schedule * sc;
 
+    *j = (bufferLength() - HEADER_SIZE - sizeof(Schedule)) / sizeof(Schedule);
+
     do{
         printf("\n\n\t\t==== LISTAR ====\n\n");
         printf("\t1) Insertion Sort\n\t2) Selection Sort\n\t0) Sem Ordenação\n\n\t\t>>>    ");
         scanf("%ld", i);
     }while( (*i) < 0 && (*i) > 2);
     
-    *j = (bufferLength() - HEADER_SIZE - sizeof(Schedule)) / sizeof(Schedule);
-
     if( (*i) == 0 ){
+        
         for( ; (*i) < (*j); (*i)++){
             sc = (Schedule *) SCHEDULE(*i);
             printf("\n\n\t==== [ %ld ] ================\n", sc->id);
@@ -136,10 +137,12 @@ void list(){
     else if((*i) == 1){
         copy(j);
         InsertionSort(j);
+        show(j);
     }
     else if((*i) == 2){
         copy(j);
         SelectionSort(j);
+        show(j);
     }
     
 }

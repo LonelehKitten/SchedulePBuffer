@@ -8,14 +8,14 @@ void InsertionSort(ULint * n){
     Schedule * aux = (Schedule *) ULINT(7);
 
     for ((*i) = 1; (*i) < (*n); (*i)++){  
-        swap( aux, (Schedule *)(sorting+(*i)*sizeof(Schedule)) );
+        move( aux, SORT(*i) );
         (*j) = (*i) - 1;
 
-        while ((*j) >= 0 && match(aux->name, ((Schedule *)(sorting+(*j)*sizeof(Schedule)))->name )){  
-            swap( (Schedule *) (sorting+( (*j)+1 )*sizeof(Schedule)), (Schedule *) (sorting+(*j)*sizeof(Schedule)) );  
-            (*j) = (*j) - 1;
+        while ((*j) >= 0 && match( SORT(*j)->name , aux->name )){  
+            move( SORT(*j+1), SORT(*j) );  
+            (*j)--;
         }  
-        swap((Schedule *) (sorting+( (*j)+1 )*sizeof(Schedule)), aux);  
+        move(SORT(*j+1), aux);  
     }  
 }
 
@@ -34,17 +34,17 @@ void SelectionSort(ULint * n){
         (*k) = (*i);
 
         for((*j) = (*i)+1; (*j) < (*n); (*j)++){
-            s1 = (Schedule *) (sorting+(*k)*sizeof(Schedule));
-            s2 = (Schedule *) (sorting+(*j)*sizeof(Schedule));
+            s1 = SORT(*k);
+            s2 = SORT(*j);
             if ( match(s2->name, s1->name) )
                 (*k) = (*j);
         }
 
-        s2 = (Schedule *) (sorting+(*i)*sizeof(Schedule));
+        s2 = SORT(*i);
 
-        swap(aux, s1);
-        swap(s1, s2);
-        swap(s2, aux);
+        move(aux, s1);
+        move(s1, s2);
+        move(s2, aux);
     } 
 }
 
@@ -53,20 +53,17 @@ void copy(ULint * n){
 
     ULint * i = (ULint *) (ULINT(2));
 
-    Schedule * sort_aux, * buffer_aux;
+    for( (*i) = 0; (*i) < (*n); (*i)++){
 
-    for( (*i) = 0; *i < (*n); (*i)++){
-        
-        sort_aux   = (Schedule *) (sorting + (*i)*sizeof(Schedule));
-        buffer_aux = (Schedule *) SCHEDULE(*i);
-
-        swap(sort_aux, buffer_aux);
+        move(SORT(*i), SCHEDULE(*i));
 
     }
 
+    for(int h = 0; h < 4; h++) printf("\n%s\n", SORT(h)->name);
+
 }
 
-void swap(Schedule * to, Schedule * from){
+void move(Schedule * to, Schedule * from){
     to->id = from->id;
     strcpy(to->name, from->name);
     to->age = from->age;
@@ -81,14 +78,43 @@ int match(char * a, char * b){
 
     (*m) = 0;
 
-    while(1){
-        if( (*m) < ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ) &&  b[(*m)] > a[(*m)])
+    printf("\n%d\n", (int) a[(*m)] > b[(*m)]);
+    if (strcmp(b, a) > 0){
+        return 1;
+    }
+    return 0;
+    /*while(1){
+        if( (*m) < ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ) &&  a[(*m)] > b[(*m)])
             return 1;
-        else if((*m) == ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ))
+        else if(a[(*m)] < b[(*m)] || (*m) == ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ))
             break;
-        else
+        else if (a[(*m)] == b[(*m)])
             (*m)++;
     }
-
+    */
     return 0;
+}
+
+void show(ULint * n){
+
+    ULint * i = (ULint *) (ULINT(2));
+    ULint * k = (ULint *) (ULINT(4));
+    Schedule * sc;
+
+    for( (*i) = 0 ; (*i) < (*n); (*i)++){
+
+        sc = SORT(*i);
+
+        sc->name[0] = toupper( sc->name[0] );
+        for((*k) = 0; sc->name[*k] && sc->name[*k+1]; (*k)++){
+            if(sc->name[*k] == ' ') sc->name[*k+1] = toupper( sc->name[*k+1] );
+        }
+
+        printf("\n\n\t==== [ %ld ] ================\n", sc->id);
+        printf("\n\t\tNome:    %s", sc->name);
+        printf("\n\t\tIdade:   %d", sc->age);
+        printf("\n\t\tCEP:     %d", sc->cep);
+    }
+
+    free(sorting);
 }
