@@ -11,7 +11,8 @@ void InsertionSort(ULint * n){
         move( aux, SORT(*i) );
         (*j) = (*i) - 1;
 
-        while ((*j) >= 0 && match( SORT(*j)->name , aux->name )){  
+        while ( (int) (*j) >= 0 && match( SORT(*j)->name, aux->name ) > 0){ 
+            printf("\n---\n") ;
             move( SORT(*j+1), SORT(*j) );  
             (*j)--;
         }  
@@ -36,7 +37,7 @@ void SelectionSort(ULint * n){
         for((*j) = (*i)+1; (*j) < (*n); (*j)++){
             s1 = SORT(*k);
             s2 = SORT(*j);
-            if ( match(s2->name, s1->name) )
+            if ( match(s2->name, s1->name) < 0)
                 (*k) = (*j);
         }
 
@@ -64,10 +65,12 @@ void copy(ULint * n){
 }
 
 void move(Schedule * to, Schedule * from){
+    printf("\n move() -> begin [ %s <-> %s ] ", to->name, from->name);
     to->id = from->id;
     strcpy(to->name, from->name);
     to->age = from->age;
     to->cep = from->cep;
+    printf("=> end\n");
 }
 
 int match(char * a, char * b){
@@ -79,19 +82,8 @@ int match(char * a, char * b){
     (*m) = 0;
 
     printf("\n%d\n", (int) a[(*m)] > b[(*m)]);
-    if (strcmp(b, a) > 0){
-        return 1;
-    }
-    return 0;
-    /*while(1){
-        if( (*m) < ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ) &&  a[(*m)] > b[(*m)])
-            return 1;
-        else if(a[(*m)] < b[(*m)] || (*m) == ( strlen(a) < strlen(b) ? strlen(a) : strlen(b) ))
-            break;
-        else if (a[(*m)] == b[(*m)])
-            (*m)++;
-    }
-    */
+    return strcmp(a, b);
+    
     return 0;
 }
 

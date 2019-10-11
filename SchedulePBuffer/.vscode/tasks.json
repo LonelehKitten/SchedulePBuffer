@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build hello world",
+      "type": "shell",
+      "command": "gcc",
+      "args": [
+        "-g", 
+        "-o", 
+        "${fileBasenameNoExtension}", 
+        "${fileBasename}",
+        "schedule.c",
+        "sorting.c",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

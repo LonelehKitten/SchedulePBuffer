@@ -1,8 +1,8 @@
 all: main.o schedule.o sorting.o
 	gcc main.o schedule.o sorting.o -o main
 
-gdb: main.o schedule.o
-	gcc main.o schedule.o -o main -g
+gdb: main.o schedule.o sorting.o
+	gcc main.o schedule.o sorting.o -o main -g
 
 main.o: main.c
 	gcc -c main.c -o main.o
