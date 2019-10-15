@@ -33,12 +33,15 @@ void SelectionSort(ULint * n){
     for((*i) = 0; (*i) < (*n)-1; (*i)++){
 
         (*k) = (*i);
-
+        s1 = SORT(*k);
+        
         for((*j) = (*i)+1; (*j) < (*n); (*j)++){
-            s1 = SORT(*k);
+            
             s2 = SORT(*j);
-            if ( match(s2->name, s1->name) < 0)
+            if ( match(s2->name, s1->name) < 0){
                 (*k) = (*j);
+                s1 = SORT(*k);
+            }
         }
 
         s2 = SORT(*i);
