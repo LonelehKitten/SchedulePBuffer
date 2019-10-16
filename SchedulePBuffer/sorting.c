@@ -70,6 +70,43 @@ void BubbleSort(ULint * n){
     }
 }
 
+void QuickSort(ULint * n, Schedule * left, Schedule * right){
+
+    Schedule * i, * j, * aux, * middle;
+
+    i = left ? left : SORT(0) ;
+    j = right ? right : SORT(*n-1);
+
+    middle = SORT(( (ULint) right - (ULint) left + sizeof(Schedule) )/2*sizeof(Schedule) - 1);
+
+    aux = (Schedule *) ULINT(7);
+
+    do{
+
+        while(match(i->name, middle->name) < 0)
+            i += sizeof(Schedule);
+
+        while(match(j->name, middle->name) > 0)
+            j -= sizeof(Schedule); if( left && right && left <= right ) return;
+
+        if( i <= j ){
+            move(aux, i);
+            move(i, j);
+            move(j, aux);
+            i += sizeof(Schedule);
+            j -= sizeof(Schedule);
+        }
+
+    }while( i <= j );
+
+    if(left < j)
+        QuickSort(NULL, left, j);
+
+    if(i < right)
+        QuickSort(NULL, i, right);
+
+}
+
 void copy(ULint * n){
     sorting = malloc((*n)*sizeof(Schedule));
 

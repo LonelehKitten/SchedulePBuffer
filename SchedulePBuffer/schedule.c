@@ -120,9 +120,9 @@ void list(){
 
     do{
         printf("\n\n\t\t==== LISTAR ====\n\n");
-        printf("\t1) Insertion Sort\n\t2) Selection Sort\n\t3) Bubble Sort\n\t0) Sem Ordenação\n\n\t\t>>>    ");
+        printf("\t1) Insertion Sort\n\t2) Selection Sort\n\t3) Bubble Sort\n\t4) Quick Sort\n\t0) Sem Ordenação\n\n\t\t>>>    ");
         scanf("%ld", i);
-    }while( (*i) < 0 && (*i) > 3);
+    }while( (*i) < 0 && (*i) > 4);
     
     if( (*i) == 0 ){
         
@@ -147,6 +147,11 @@ void list(){
     else if((*i) == 3){
         copy(j);
         BubbleSort(j);
+        show(j);
+    }
+    else if((*i) == 4){
+        copy(j);
+        QuickSort(j, NULL, NULL);
         show(j);
     }
     
