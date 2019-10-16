@@ -7,11 +7,11 @@ void InsertionSort(ULint * n){
 
     Schedule * aux = (Schedule *) ULINT(7);
 
-    for ((*i) = 1; (*i) < (*n); (*i)++){  
+    for((*i) = 1; (*i) < (*n); (*i)++){  
         move( aux, SORT(*i) );
         (*j) = (*i) - 1;
 
-        while ( (int) (*j) >= 0 && match( SORT(*j)->name, aux->name ) > 0){ 
+        while( (int) (*j) >= 0 && match( SORT(*j)->name, aux->name ) > 0){ 
             printf("\n---\n") ;
             move( SORT(*j+1), SORT(*j) );  
             (*j)--;
@@ -50,6 +50,24 @@ void SelectionSort(ULint * n){
         move(s1, s2);
         move(s2, aux);
     } 
+}
+
+void BubbleSort(ULint * n){
+
+    ULint * i = (ULint *) (ULINT(1));
+    ULint * j = (ULint *) (ULINT(2));
+
+    Schedule * aux = (Schedule *) ULINT(7);
+
+    for((*i) = 0; (*i) < (*n)-1; (*i)++){
+        for((*j) = 0; (*j) < (*n)-(*i)-1; (*j)++){
+            if( match( SORT(*j)->name, SORT(*j+1)->name ) > 0 ){
+                move( aux, SORT(*j) );
+                move( SORT(*j), SORT(*j+1) );
+                move( SORT(*j+1), aux );
+            }
+        }
+    }
 }
 
 void copy(ULint * n){

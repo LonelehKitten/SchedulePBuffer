@@ -12,6 +12,7 @@ void * sorting;
 
 void InsertionSort(ULint * n);
 void SelectionSort(ULint * n);
+void BubbleSort(ULint * n);
 void copy(ULint * n);
 void move(Schedule * to, Schedule * from);
 int match(char * a, char * b);
