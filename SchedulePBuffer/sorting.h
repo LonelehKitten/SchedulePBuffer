@@ -19,6 +19,6 @@ void move(Schedule * to, Schedule * from);
 int match(char * a, char * b);
 void show(ULint * n);
 
-#define SORT(I) ( (Schedule *) sorting+(I)*sizeof(Schedule) )
+#define SORT(I) ( (Schedule *) (sorting+(I)*sizeof(Schedule)) )
 
 #endif /* SORTING_H */
