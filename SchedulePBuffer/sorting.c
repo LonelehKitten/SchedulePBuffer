@@ -70,6 +70,11 @@ void BubbleSort(ULint * n){
     }
 }
 
+
+    //middle = SORT( ( (( ((ULint) j) - ((ULint) SORT(0)) ) / sizeof(Schedule)) + (( ((ULint) i) - ((ULint) SORT(0)) ) / sizeof(Schedule)) ) / 2);
+
+    
+
 void QuickSort(ULint * n, Schedule * left, Schedule * right){
 
     Schedule * i, * j, * aux, * middle;
@@ -106,8 +111,6 @@ void QuickSort(ULint * n, Schedule * left, Schedule * right){
     }
     
 }
-
-
 
 void copy(ULint * n){
     sorting = malloc((*n)*sizeof(Schedule));
