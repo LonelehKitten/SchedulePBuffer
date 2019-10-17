@@ -77,35 +77,37 @@ void QuickSort(ULint * n, Schedule * left, Schedule * right){
     i = left ? left : SORT(0) ;
     j = right ? right : SORT(*n-1);
 
-    middle = SORT(( ((ULint) j) - ((ULint) i) + sizeof(Schedule) )/2*sizeof(Schedule));
+    if(i < j){
 
-    aux = (Schedule *) ULINT(7);
+        aux = (Schedule *) ULINT(7);
 
-    do{
+        middle = i;
 
-        while(match(i->name, middle->name) < 0)
-            i += sizeof(Schedule);
+        while(i < j){
+            while(match(i->name, middle->name) <= 0 && i < (right ? right : SORT(*n-1)) )
+                i++;
 
-        while(match(j->name, middle->name) > 0)
-            j -= sizeof(Schedule);
+            while(match(j->name, middle->name) > 0)
+                j--;
 
-        if( i <= j ){
-            move(aux, i);
-            move(i, j);
-            move(j, aux);
-            i += sizeof(Schedule);
-            j -= sizeof(Schedule);
+            if(i < j){
+                move(aux, i);
+                move(i, j);
+                move(j, aux);
+            }
         }
 
-    }while( i <= j );
+        move(aux, middle);
+        move(middle, j);
+        move(j, aux);
 
-    if(left < j)
-        QuickSort(NULL, left, j);
-
-    if(i < right)
-        QuickSort(NULL, i, right);
-
+        QuickSort(NULL, (left ? left : SORT(0)), j-1);
+        QuickSort(NULL, j+1, (right ? right : SORT(*n-1)));
+    }
+    
 }
+
+
 
 void copy(ULint * n){
     sorting = malloc((*n)*sizeof(Schedule));
