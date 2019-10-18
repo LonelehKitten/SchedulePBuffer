@@ -21,7 +21,7 @@
 void menu(ULint * op){
   printf("\n\n\t\t==== AGENDA ====\n\n");
   printf("\t1) Cadastrar\n\t2) Remover\n\t3) Procurar\n\t4) Listar\n\t0) Sair\n\n\t\t>>>    ");
-  scanf("%ld", op);
+  scanf("%lld", op);
   getchar();
 }
 
@@ -62,7 +62,7 @@ void pop(){
 
     printf("\n\n\t\t==== REMOVER ====\n\n");
     printf("\tID:    ");
-    scanf("%ld", id);
+    scanf("%lld", id);
     getchar();
 
     /* CHECKPOINT */
@@ -97,7 +97,7 @@ void search(){
     for(*i = 0; *i < *j; (*i)++){
         sc = (Schedule *) SCHEDULE(*i);
         if(strcmp( sc->name , name ) == 0){
-          printf("\n\n\t==== [ %ld ] ================\n", sc->id);
+          printf("\n\n\t==== [ %lld ] ================\n", sc->id);
           printf("\n\t\tNome:    %s", sc->name);
           printf("\n\t\tIdade:   %d", sc->age);
           printf("\n\t\tCEP:     %d", sc->cep);
@@ -120,15 +120,15 @@ void list(){
 
     do{
         printf("\n\n\t\t==== LISTAR ====\n\n");
-        printf("\t1) Insertion Sort\n\t2) Selection Sort\n\t3) Bubble Sort\n\t4) Quick Sort\n\t0) Sem Ordenação\n\n\t\t>>>    ");
-        scanf("%ld", i);
-    }while( (*i) < 0 && (*i) > 4);
+        printf("\t1) Insertion Sort\n\t2) Selection Sort\n\t3) Bubble Sort\n\t4) Quick Sort\n\t5) Merge Sort\n\t0) Sem Ordenação\n\n\t\t>>>    ");
+        scanf("%lld", i);
+    }while( (*i) < 0 && (*i) > 5);
     
     if( (*i) == 0 ){
         
         for( ; (*i) < (*j); (*i)++){
             sc = (Schedule *) SCHEDULE(*i);
-            printf("\n\n\t==== [ %ld ] ================\n", sc->id);
+            printf("\n\n\t==== [ %lld ] ================\n", sc->id);
             printf("\n\t\tNome:    %s", sc->name);
             printf("\n\t\tIdade:   %d", sc->age);
             printf("\n\t\tCEP:     %d", sc->cep);
@@ -152,6 +152,11 @@ void list(){
     else if((*i) == 4){
         copy(j);
         QuickSort(j, NULL, NULL);
+        show(j);
+    }
+    else if((*i) == 5){
+        copy(j);
+        MergeSort(j, NULL, NULL);
         show(j);
     }
     

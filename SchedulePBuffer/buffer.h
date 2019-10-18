@@ -1,7 +1,7 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-typedef unsigned long int ULint;
+typedef unsigned long long int ULint;
 
 typedef struct schedule{
   ULint id;

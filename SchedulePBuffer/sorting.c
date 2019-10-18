@@ -112,6 +112,68 @@ void QuickSort(ULint * n, Schedule * left, Schedule * right){
     
 }
 
+void MergeSort(ULint * n, Schedule * left, Schedule * right){
+
+    left = left ? left : SORT(0);
+    right = right ? right : SORT(*n-1);
+
+    if (left < right){ printf("\nok\n");
+        Schedule * middle = SORT( ( (( ((ULint) right ) - ((ULint) SORT(0)) ) / sizeof(Schedule)) + (( ((ULint) left) - ((ULint) SORT(0)) ) / sizeof(Schedule)) ) / 2);
+  
+        MergeSort(NULL, left, middle); 
+        MergeSort(NULL, middle+1, right); 
+  
+        // MERGE
+
+        Schedule * i, * j, * k; 
+        ULint * n1 = ULINT(1), * n2 = ULINT(2);
+        *n1 = (( ((ULint) middle) - ((ULint) SORT(0)) ) / sizeof(Schedule)) - (( ((ULint) left) - ((ULint) SORT(0)) ) / sizeof(Schedule)) + 1;
+        *n2 = (( ((ULint) right) - ((ULint) SORT(0)) ) / sizeof(Schedule)) - (( ((ULint) middle) - ((ULint) SORT(0)) ) / sizeof(Schedule));
+
+        void * subLEFT = malloc( (*n1)*sizeof(Schedule) );
+        void * subRIGHT = malloc( (*n2)*sizeof(Schedule) );
+    
+        for (i = subLEFT; i < ((Schedule *)subLEFT)+(*n1); i++)
+            move(i, SORT( ( (( ((ULint) left) - ((ULint) SORT(0)) ) / sizeof(Schedule)) + (( ((ULint) i) - ((ULint) subLEFT ) / sizeof(Schedule)) ) ) ));
+
+        for (j = subRIGHT; j < ((Schedule *)subRIGHT)+(*n2); j++)
+            move(j, SORT( ( (( ((ULint) middle) - ((ULint) SORT(0)) ) / sizeof(Schedule)) + (( ((ULint) j) - ((ULint) subRIGHT ) / sizeof(Schedule)) ) ) + 1));
+    
+        i = subLEFT;
+        j = subRIGHT;
+        k = left;
+        while (i < ((Schedule *)subLEFT)+(*n1) && j < ((Schedule *)subRIGHT)+(*n2)){ 
+            if ( match(i->name, j->name) <= 0 ){
+                move(k, i);
+                i++; 
+            } 
+            else{ 
+                move(k, j);
+                j++; 
+            } 
+            k++; 
+        } 
+    
+        while (i < ((Schedule *)subLEFT)+(*n1)){ 
+            move(k, i); 
+            i++; 
+            k++; 
+        } 
+    
+        while (j < ((Schedule *)subRIGHT)+(*n2)){ 
+            move(k, j);
+            j++; 
+            k++; 
+        }
+
+        free(subLEFT);
+        free(subRIGHT);
+
+        // MERGE
+    } 
+
+}
+
 void copy(ULint * n){
     sorting = malloc((*n)*sizeof(Schedule));
 
@@ -165,7 +227,7 @@ void show(ULint * n){
             if(sc->name[*k] == ' ') sc->name[*k+1] = toupper( sc->name[*k+1] );
         }
 
-        printf("\n\n\t==== [ %ld ] ================\n", sc->id);
+        printf("\n\n\t==== [ %lld ] ================\n", sc->id);
         printf("\n\t\tNome:    %s", sc->name);
         printf("\n\t\tIdade:   %d", sc->age);
         printf("\n\t\tCEP:     %d", sc->cep);
